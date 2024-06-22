@@ -1,0 +1,45 @@
+.flex-container {
+  margin-top: 250px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.title {
+  font-family: "Raleway", sans-serif;
+  font-weight: 600;
+}
+.subtitle {
+  margin-bottom: 20px;
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: 400;
+}
+@media only screen and (max-width: 600px) {
+  .title {
+    font-size: 2em;
+  }
+  .subtitle {
+    font-size: 10px;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .title {
+    font-size: 3em;
+  }
+  .subtitle {
+    font-size: 20px;
+  }
+}
+@media only screen and (min-width: 769px) {
+  .title {
+    font-size: 4em;
+  }
+  .subtitle {
+    font-size: 25px;
+  }
+}
+@media only screen and (min-width: 870px) {
+  .title {
+    font-size: 7em;
+  }
+}
