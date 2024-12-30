@@ -2,13 +2,11 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { dataModule } from "./data module/dataModule";
+import { DataModule } from "./data module/dataModule";
 const logResponses = async () => {
-  const DataModule = new dataModule();
-  const a = await DataModule.getPNRData("2918332877");
-  const b = await DataModule.getStationName("GWL");
-  console.log(a);
-  console.log(b);
+  const dataModule = new DataModule();
+  const a = await dataModule.getPNRData("2918332877");
+  console.log(await dataModule.getBookingInfo(a));
 };
 function App() {
   const [count, setCount] = useState(0);
