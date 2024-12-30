@@ -1,11 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import { dataModule } from "./data module/dataModule";
+const logResponses = async () => {
+  const DataModule = new dataModule();
+  const a = await DataModule.getPNRData("2918332877");
+  const b = await DataModule.getStationName("GWL");
+  console.log(a);
+  console.log(b);
+};
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [count, setCount] = useState(0);
+  logResponses();
   return (
     <>
       <div>
@@ -29,7 +36,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
