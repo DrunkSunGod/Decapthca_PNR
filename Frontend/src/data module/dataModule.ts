@@ -56,7 +56,7 @@ export class DataModule {
       //The full stationName is stored at station.e
       fetch(stationNameEndPoint)
         .then((response) => response.json())
-        .then((data) => data[0].e);
+        .then((data) => (stationName = data[0].e));
     } catch (error) {
       console.log(error);
       stationName = stationCode;
