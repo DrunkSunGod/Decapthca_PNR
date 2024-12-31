@@ -1,15 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import {
   DataModule,
   IBookingInfo,
   IPassengerData,
 } from "./data module/dataModule";
-const logResponses = async () => {
-  const dataModule = new DataModule();
-  const a = await dataModule.getPNRData("2918332877");
-  console.log(dataModule.getAllPassengerData(a));
-};
+
 function App() {
   //State of the App
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -23,7 +19,21 @@ function App() {
     IPassengerData[] | null
   >(null);
   const [isDataVisible, setIsDataVisibe] = useState<boolean>(false);
-  logResponses();
+
+  useEffect(() => {
+    const fetchAndSetAppData = async () => {
+      const dataModule = new DataModule();
+      const appData = await dataModule.getAppData("2918332877");
+      const [fetchedBookingInfo, fetchedAllPassengerData, fetchedErrorMessage] =
+        appData;
+      console.log(appData);
+      setBookingInfo(fetchedBookingInfo);
+      setAllPassengerData(fetchedAllPassengerData);
+      setErrorMessage(fetchedErrorMessage);
+    };
+    fetchAndSetAppData();
+  }, [PNR]);
+
   return (
     <div>
       <h1>Hi</h1>

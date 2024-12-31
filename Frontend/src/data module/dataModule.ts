@@ -118,4 +118,14 @@ export class DataModule {
     }
     return allPassengerData;
   }
+
+  public async getAppData(
+    PNR: string
+  ): Promise<[IBookingInfo | null, IPassengerData[] | null, string]> {
+    const rawPNRData = await this.getPNRData(PNR);
+    const bookingInfo = await this.getBookingInfo(rawPNRData);
+    const allPassengerData = this.getAllPassengerData(rawPNRData);
+    const errorMessage = rawPNRData.errorMessage ?? "";
+    return [bookingInfo, allPassengerData, errorMessage];
+  }
 }
