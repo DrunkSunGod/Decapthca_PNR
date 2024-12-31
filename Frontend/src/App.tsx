@@ -6,7 +6,7 @@ import { DataModule } from "./data module/dataModule";
 const logResponses = async () => {
   const dataModule = new DataModule();
   const a = await dataModule.getPNRData("2918332877");
-  console.log(await dataModule.getBookingInfo(a));
+  console.log(dataModule.getPassengerList(a));
 };
 function App() {
   const [count, setCount] = useState(0);

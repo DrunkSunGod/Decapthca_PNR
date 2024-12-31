@@ -39,10 +39,20 @@ export class DataModule {
 
   public async getPNRData(PNR: string) {
     const PNRDetailsEndpoint = this.PNRDetailsBaseURL + PNR;
-    const PNRData = fetch(PNRDetailsEndpoint)
-      .then((response) => response.json())
-      .then((data) => data);
-    console.log(PNRData);
+    let PNRData;
+
+    try {
+      const response = fetch(PNRDetailsEndpoint);
+      const data = (await response).json();
+      PNRData = data;
+    } catch (error) {
+      console.error(error);
+      PNRData = {
+        errorMessage:
+          "Sorry, we are unable to process your request at the moment. Please try later.",
+      };
+    }
+
     return PNRData;
   }
 
@@ -54,11 +64,11 @@ export class DataModule {
       //the API returns a list of suggested stations.
       //Result that matches exactly with the given stationCode is stored at 0th index.
       //The full stationName is stored at station.e
-      fetch(stationNameEndPoint)
-        .then((response) => response.json())
-        .then((data) => (stationName = data[0].e));
+      const response = await fetch(stationNameEndPoint);
+      const data = await response.json();
+      stationName = data[0].e;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       stationName = stationCode;
     }
 
@@ -91,5 +101,21 @@ export class DataModule {
 
   private isWL(rawPNRData): boolean {
     return rawPNRData.isWL === "Y";
+  }
+
+  public getPassengerList(rawPNRData): IPassengerData[] | null {
+    if (this.hasErrorMessage(rawPNRData)) return null;
+
+    const rawPassengerList = rawPNRData.passengerList;
+    const passengerList: IPassengerData[] = [];
+    for (const rawPassengerData of rawPassengerList) {
+      const passengerData: IPassengerData = {
+        serialNumber: rawPassengerData.serialNumber,
+        bookingStatus: rawPassengerData.bookingStatusDetails,
+        currentStatus: rawPassengerData.currentStatusDetails,
+      };
+      passengerList.push(passengerData);
+    }
+    return passengerList;
   }
 }
