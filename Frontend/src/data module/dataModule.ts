@@ -1,7 +1,7 @@
 //active test PNR: 2918332877
 export interface IDateOfJourney {
   day: string;
-  date: string;
+  date: number;
   month: string;
 }
 
@@ -52,7 +52,6 @@ export class DataModule {
           "Sorry, we are unable to process your request at the moment. Please try later.",
       };
     }
-
     return PNRData;
   }
 
@@ -88,9 +87,12 @@ export class DataModule {
       trainNumber: rawPNRData.trainNumber,
       trainName: rawPNRData.trainName,
       sourceStation: await this.getStationName(rawPNRData.sourceStation),
+      startTime: this.getTimeFromDateString(rawPNRData.arrivalDate),
       destinationStation: await this.getStationName(
         rawPNRData.destinationStation
       ),
+      endTime: this.getTimeFromDateString(rawPNRData.dateOfJourney),
+      dateOfJourney: this.getDateOfJourney(rawPNRData),
       journeyClass: rawPNRData.journeyClass,
       quota: rawPNRData.quota,
       chartStatus: rawPNRData.chartStatus,
@@ -123,9 +125,43 @@ export class DataModule {
     PNR: string
   ): Promise<[IBookingInfo | null, IPassengerData[] | null, string]> {
     const rawPNRData = await this.getPNRData(PNR);
+    console.log(rawPNRData);
     const bookingInfo = await this.getBookingInfo(rawPNRData);
     const allPassengerData = this.getAllPassengerData(rawPNRData);
     const errorMessage = rawPNRData.errorMessage ?? "";
     return [bookingInfo, allPassengerData, errorMessage];
+  }
+
+  private getTimeFromDateString(dateString: string): string {
+    const date = new Date(dateString);
+    const timeInDisplayFormat =
+      date.getHours().toString() + ":" + date.getMinutes().toString();
+    return timeInDisplayFormat;
+  }
+
+  private getDateOfJourney(rawPNRData): IDateOfJourney {
+    const dateString = rawPNRData.dateOfJourney;
+    const date = new Date(dateString);
+    const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const dayIndex = date.getDay() - 1;
+    return {
+      day: weekdays[dayIndex],
+      date: date.getDate(),
+      month: months[date.getMonth()],
+    };
   }
 }
