@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import {
   DataModule,
@@ -8,13 +8,13 @@ import {
 import { ErrorMessage } from "./presentational/errorMessage/ErrorMessage";
 import { Form } from "./presentational/form/Form";
 import { CircularLoading } from "./presentational/circularLoading/CircularLoading";
+import { PNRStatus } from "./presentational/PNRStatus/PNRStatus";
 
 function App() {
   //State of the App
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isErrorMessageVisible, setIsErrorMessageVisible] =
     useState<boolean>(false);
-  const [PNR, setPNR] = useState<string>("");
   const [isFormVisible, setIsFormVisible] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [bookingInfo, setBookingInfo] = useState<IBookingInfo | null>(null);
@@ -41,6 +41,7 @@ function App() {
       setIsErrorMessageVisible(true);
     }
     setIsFormVisible(true);
+    setIsDataVisibe(true);
   };
 
   const onDismissError = (): void => {
@@ -60,8 +61,14 @@ function App() {
         errorMessage={errorMessage}
         onDismissError={onDismissError}
       ></ErrorMessage>
+      <h1 className="title">PNR Status</h1>
       <Form isFormVisible={isFormVisible} onSubmitForm={onSubmitForm}></Form>
       <CircularLoading isLoading={isLoading}></CircularLoading>
+      <PNRStatus
+        bookingInfo={bookingInfo}
+        allPassengersData={allPassengerData}
+        isDataVisible={isDataVisible}
+      ></PNRStatus>
     </div>
   );
 }
