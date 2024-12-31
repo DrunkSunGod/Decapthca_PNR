@@ -20,6 +20,7 @@ export function Form(props: IFormProps) {
         onClick={() => props.onSubmitForm(inputValue)}
         color="success"
         startIcon={<TrainIcon></TrainIcon>}
+        variant="outlined"
       >
         Check
       </Button>

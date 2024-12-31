@@ -43,8 +43,8 @@ export class DataModule {
     let PNRData;
 
     try {
-      const response = fetch(PNRDetailsEndpoint);
-      const data = (await response).json();
+      const response = await fetch(PNRDetailsEndpoint);
+      const data = await response.json();
       PNRData = data;
     } catch (error) {
       console.error(error);

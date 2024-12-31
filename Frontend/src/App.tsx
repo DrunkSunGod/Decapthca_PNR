@@ -48,6 +48,7 @@ function App() {
   };
 
   async function onSubmitForm(inputValue: string) {
+    setIsErrorMessageVisible(false);
     setIsLoading(true);
     await fetchAndSetAppData(inputValue);
     setIsLoading(false);
