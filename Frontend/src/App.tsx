@@ -6,6 +6,8 @@ import {
   IPassengerData,
 } from "./data module/dataModule";
 import { ErrorMessage } from "./presentational/errorMessage/ErrorMessage";
+import { Form } from "./presentational/form/Form";
+import { CircularLoading } from "./presentational/circularLoading/CircularLoading";
 
 function App() {
   //State of the App
@@ -20,34 +22,46 @@ function App() {
     IPassengerData[] | null
   >(null);
   const [isDataVisible, setIsDataVisibe] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchAndSetAppData = async () => {
-      const dataModule = new DataModule();
-      const appData = await dataModule.getAppData("2918332877");
-      const [fetchedBookingInfo, fetchedAllPassengerData, fetchedErrorMessage] =
-        appData;
-      console.log(appData);
-      setBookingInfo(fetchedBookingInfo);
-      setAllPassengerData(fetchedAllPassengerData);
-      if (fetchedErrorMessage.length) {
-        setErrorMessage(fetchedErrorMessage);
-        setIsErrorMessageVisible(true);
-      }
-    };
-    fetchAndSetAppData();
-  }, [PNR]);
+  //"291833287"
+  const fetchAndSetAppData = async (PNR: string) => {
+    setIsFormVisible(false);
+    if (isDataVisible) setIsDataVisibe(false);
+    const dataModule = new DataModule();
+    const appData = await dataModule.getAppData(PNR);
+    const [fetchedBookingInfo, fetchedAllPassengerData, fetchedErrorMessage] =
+      appData;
+    console.log(appData);
+    setBookingInfo(fetchedBookingInfo);
+    setAllPassengerData(fetchedAllPassengerData);
+    if (fetchedBookingInfo) {
+      setIsDataVisibe(true);
+    }
+    if (fetchedErrorMessage.length) {
+      setErrorMessage(fetchedErrorMessage);
+      setIsErrorMessageVisible(true);
+    }
+    setIsFormVisible(true);
+  };
 
   const onDismissError = (): void => {
     setIsErrorMessageVisible(false);
   };
 
+  async function onSubmitForm(inputValue: string) {
+    setIsLoading(true);
+    await fetchAndSetAppData(inputValue);
+    setIsLoading(false);
+  }
   return (
-    <ErrorMessage
-      isErrorMessageVisible={isErrorMessageVisible}
-      errorMessage={errorMessage}
-      onDismissError={onDismissError}
-    ></ErrorMessage>
+    <div className="app">
+      <ErrorMessage
+        isErrorMessageVisible={isErrorMessageVisible}
+        errorMessage={errorMessage}
+        onDismissError={onDismissError}
+      ></ErrorMessage>
+      <Form isFormVisible={isFormVisible} onSubmitForm={onSubmitForm}></Form>
+      <CircularLoading isLoading={isLoading}></CircularLoading>
+    </div>
   );
 }
 

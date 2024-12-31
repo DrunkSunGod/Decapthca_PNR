@@ -38,6 +38,7 @@ export class DataModule {
   }
 
   public async getPNRData(PNR: string) {
+    if (PNR.length === 0) return { errorMessage: "Please Enter Your PNR" };
     const PNRDetailsEndpoint = this.PNRDetailsBaseURL + PNR;
     let PNRData;
 
@@ -125,7 +126,6 @@ export class DataModule {
     PNR: string
   ): Promise<[IBookingInfo | null, IPassengerData[] | null, string]> {
     const rawPNRData = await this.getPNRData(PNR);
-    console.log(rawPNRData);
     const bookingInfo = await this.getBookingInfo(rawPNRData);
     const allPassengerData = this.getAllPassengerData(rawPNRData);
     const errorMessage = rawPNRData.errorMessage ?? "";
