@@ -5,11 +5,12 @@ import {
   IBookingInfo,
   IPassengerData,
 } from "./data module/dataModule";
+import { ErrorMessage } from "./presentational/errorMessage/ErrorMessage";
 
 function App() {
   //State of the App
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [isErrorMessageVisible, setIsErrorMessageVisisble] =
+  const [isErrorMessageVisible, setIsErrorMessageVisible] =
     useState<boolean>(false);
   const [PNR, setPNR] = useState<string>("");
   const [isFormVisible, setIsFormVisible] = useState<boolean>(true);
@@ -29,15 +30,24 @@ function App() {
       console.log(appData);
       setBookingInfo(fetchedBookingInfo);
       setAllPassengerData(fetchedAllPassengerData);
-      setErrorMessage(fetchedErrorMessage);
+      if (fetchedErrorMessage.length) {
+        setErrorMessage(fetchedErrorMessage);
+        setIsErrorMessageVisible(true);
+      }
     };
     fetchAndSetAppData();
   }, [PNR]);
 
+  const onDismissError = (): void => {
+    setIsErrorMessageVisible(false);
+  };
+
   return (
-    <div>
-      <h1>Hi</h1>
-    </div>
+    <ErrorMessage
+      isErrorMessageVisible={isErrorMessageVisible}
+      errorMessage={errorMessage}
+      onDismissError={onDismissError}
+    ></ErrorMessage>
   );
 }
 
