@@ -14,6 +14,7 @@ interface IAllPassengerCardProps {
   allPassengersData: IPassengerData[] | null;
   chartStatus?: string;
   isWL?: boolean;
+  onClickRetry: () => void;
 }
 export function AllPassengerCard(props: IAllPassengerCardProps): JSX.Element {
   const [lastFetchedTime, setLastFetchedTime] = useState(0);
@@ -33,9 +34,9 @@ export function AllPassengerCard(props: IAllPassengerCardProps): JSX.Element {
             <div className="lastFetchedTime">
               {getLastFetchedTimeString(lastFetchedTime)}
             </div>
-            <div className="retryIcon">
+            <button onClick={props.onClickRetry} className="retryIcon">
               <ReplayIcon></ReplayIcon>
-            </div>
+            </button>
           </div>
         </div>
         <TableContainer component={Paper}>

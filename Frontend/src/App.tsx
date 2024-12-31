@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 import {
   DataModule,
@@ -22,7 +22,11 @@ function App() {
     IPassengerData[] | null
   >(null);
   const [isDataVisible, setIsDataVisibe] = useState<boolean>(false);
-  //"291833287"
+  const inputRef = useRef<HTMLInputElement>(null);
+  function onClickChange() {
+    inputRef.current?.focus();
+    setIsDataVisibe(false);
+  }
   const fetchAndSetAppData = async (PNR: string) => {
     setIsFormVisible(false);
     if (isDataVisible) setIsDataVisibe(false);
@@ -43,7 +47,13 @@ function App() {
     setIsFormVisible(true);
     setIsDataVisibe(fetchedErrorMessage.length === 0);
   };
-
+  async function onClickRetry() {
+    setIsDataVisibe(false);
+    setIsFormVisible(false);
+    setIsLoading(true);
+    await fetchAndSetAppData(bookingInfo!.PNR);
+    setIsLoading(false);
+  }
   const onDismissError = (): void => {
     setIsErrorMessageVisible(false);
   };
@@ -62,12 +72,18 @@ function App() {
         onDismissError={onDismissError}
       ></ErrorMessage>
       <h1 className="title">PNR Status</h1>
-      <Form isFormVisible={isFormVisible} onSubmitForm={onSubmitForm}></Form>
+      <Form
+        isFormVisible={isFormVisible}
+        onSubmitForm={onSubmitForm}
+        ref={inputRef}
+      ></Form>
       <CircularLoading isLoading={isLoading}></CircularLoading>
       <PNRStatus
         bookingInfo={bookingInfo}
         allPassengersData={allPassengerData}
         isDataVisible={isDataVisible}
+        onClickChange={onClickChange}
+        onClickRetry={onClickRetry}
       ></PNRStatus>
     </div>
   );

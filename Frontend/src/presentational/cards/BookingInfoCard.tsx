@@ -1,7 +1,9 @@
 import { IBookingInfo } from "../../data module/dataModule";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import "./BookingInfoCard.css";
-type IBookingInfoCardProps = Partial<IBookingInfo | null>;
+type IBookingInfoCardProps = Partial<IBookingInfo | null> & {
+  onClickChange: () => void;
+};
 export function BookingInfoCard(props: IBookingInfoCardProps): JSX.Element {
   const trainInfo = props?.trainNumber + " - " + props?.trainName;
   return props ? (
@@ -9,7 +11,9 @@ export function BookingInfoCard(props: IBookingInfoCardProps): JSX.Element {
       <div className="bookingInfoCard">
         <div className="cardHeader">
           <div className="PNR">PNR: {props.PNR}</div>
-          <a className="changeLink">CHANGE</a>
+          <a onClick={props.onClickChange} className="changeLink">
+            CHANGE
+          </a>
         </div>
         <div className="trainInfo">{trainInfo}</div>
         <div className="sourceAndDestination">

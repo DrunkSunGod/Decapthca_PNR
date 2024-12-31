@@ -29,8 +29,13 @@
   grid-column: 1/1;
 }
 .retryIcon {
+  background: none;
+  border: none;
   color: #5db85b;
   grid-column: 2/2;
+  &:hover {
+    cursor: pointer;
+  }
 }
 .columnName {
   color: #858585 !important;

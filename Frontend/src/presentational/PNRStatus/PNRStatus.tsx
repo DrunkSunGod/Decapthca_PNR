@@ -5,6 +5,8 @@ interface IPNRStatusProps {
   bookingInfo: IBookingInfo | null;
   allPassengersData: IPassengerData[] | null;
   isDataVisible: boolean;
+  onClickChange: () => void;
+  onClickRetry: () => void;
 }
 export function PNRStatus(props: IPNRStatusProps) {
   const [bookingInfo, allPassengersData] = [
@@ -24,11 +26,13 @@ export function PNRStatus(props: IPNRStatusProps) {
         dateOfJourney={bookingInfo?.dateOfJourney}
         journeyClass={bookingInfo?.journeyClass}
         quota={bookingInfo?.quota}
+        onClickChange={props.onClickChange}
       ></BookingInfoCard>
       <AllPassengerCard
         allPassengersData={allPassengersData}
         chartStatus={bookingInfo?.chartStatus}
         isWL={bookingInfo?.isWL}
+        onClickRetry={props.onClickRetry}
       ></AllPassengerCard>
     </div>
   ) : (
