@@ -103,19 +103,19 @@ export class DataModule {
     return rawPNRData.isWL === "Y";
   }
 
-  public getPassengerList(rawPNRData): IPassengerData[] | null {
+  public getAllPassengerData(rawPNRData): IPassengerData[] | null {
     if (this.hasErrorMessage(rawPNRData)) return null;
 
-    const rawPassengerList = rawPNRData.passengerList;
-    const passengerList: IPassengerData[] = [];
-    for (const rawPassengerData of rawPassengerList) {
+    const rawAllPassengerData = rawPNRData.passengerList;
+    const allPassengerData: IPassengerData[] = [];
+    for (const rawPassengerData of rawAllPassengerData) {
       const passengerData: IPassengerData = {
-        serialNumber: rawPassengerData.serialNumber,
+        serialNumber: rawPassengerData.passengerSerialNumber,
         bookingStatus: rawPassengerData.bookingStatusDetails,
         currentStatus: rawPassengerData.currentStatusDetails,
       };
-      passengerList.push(passengerData);
+      allPassengerData.push(passengerData);
     }
-    return passengerList;
+    return allPassengerData;
   }
 }

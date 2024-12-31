@@ -1,39 +1,33 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { DataModule } from "./data module/dataModule";
+import {
+  DataModule,
+  IBookingInfo,
+  IPassengerData,
+} from "./data module/dataModule";
 const logResponses = async () => {
   const dataModule = new DataModule();
   const a = await dataModule.getPNRData("2918332877");
-  console.log(dataModule.getPassengerList(a));
+  console.log(dataModule.getAllPassengerData(a));
 };
 function App() {
-  const [count, setCount] = useState(0);
+  //State of the App
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isErrorMessageVisible, setIsErrorMessageVisisble] =
+    useState<boolean>(false);
+  const [PNR, setPNR] = useState<string>("");
+  const [isFormVisible, setIsFormVisible] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [bookingInfo, setBookingInfo] = useState<IBookingInfo | null>(null);
+  const [allPassengerData, setAllPassengerData] = useState<
+    IPassengerData[] | null
+  >(null);
+  const [isDataVisible, setIsDataVisibe] = useState<boolean>(false);
   logResponses();
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h1>Hi</h1>
+    </div>
   );
 }
 
