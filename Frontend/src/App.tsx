@@ -41,7 +41,7 @@ function App() {
       setIsErrorMessageVisible(true);
     }
     setIsFormVisible(true);
-    setIsDataVisibe(true);
+    setIsDataVisibe(fetchedErrorMessage.length === 0);
   };
 
   const onDismissError = (): void => {

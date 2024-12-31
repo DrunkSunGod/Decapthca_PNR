@@ -1,31 +1,32 @@
 import { IBookingInfo } from "../../data module/dataModule";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import "./BookingInfoCard.css";
 type IBookingInfoCardProps = Partial<IBookingInfo | null>;
 export function BookingInfoCard(props: IBookingInfoCardProps): JSX.Element {
+  const trainInfo = props?.trainNumber + " - " + props?.trainName;
   return props ? (
-    <div className="bookingInfoCard">
-      <div className="cardHeader">
-        <div className="PNR">PNR: {props.PNR}</div>
-        <div className="changeLink">CHANGE</div>
-      </div>
-      <div className="trainInfo">
-        <div className="trainNumber">{props.trainNumber} -</div>
-        <div className="trainName">{props.trainName}</div>
-      </div>
-      <div className="sourceAndDestination">
-        <div className="source">
-          {props.sourceStation},{props.startTime}
+    <div className="cardContainer">
+      <div className="bookingInfoCard">
+        <div className="cardHeader">
+          <div className="PNR">PNR: {props.PNR}</div>
+          <a className="changeLink">CHANGE</a>
         </div>
-        <div className="arrowIcon">
-          <ArrowForwardIcon></ArrowForwardIcon>
+        <div className="trainInfo">{trainInfo}</div>
+        <div className="sourceAndDestination">
+          <div className="source">
+            {props.sourceStation},{props.startTime}
+          </div>
+          <div className="arrowIcon">
+            <ArrowForwardIcon></ArrowForwardIcon>
+          </div>
+          <div className="destination">
+            {props.destinationStation},{props.endTime}
+          </div>
         </div>
-        <div className="destination">
-          {props.destinationStation},{props.endTime}
+        <div className="cardFooter">
+          {props.dateOfJourney?.day}, {props.dateOfJourney?.date}{" "}
+          {props.dateOfJourney?.month} | {props.journeyClass} | {props.quota}
         </div>
-      </div>
-      <div className="cardFooter">
-        {props.dateOfJourney?.day}, {props.dateOfJourney?.date}{" "}
-        {props.dateOfJourney?.month} | {props.journeyClass} | {props.quota}
       </div>
     </div>
   ) : (

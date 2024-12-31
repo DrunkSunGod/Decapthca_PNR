@@ -1,0 +1,46 @@
+.passengerStatus {
+  font-size: 30px;
+  font-weight: 900;
+  margin-left: 20px;
+}
+.allPassengerCard {
+  margin-top: 50px;
+  width: 60vw;
+  border-radius: 4px;
+  outline: 1px solid #5db85b;
+  margin-bottom: 10px;
+}
+.allPassengerCardHeader {
+  justify-content: space-between;
+  align-items: start;
+}
+.chartStatus {
+  margin-right: 8px;
+  display: inline-grid;
+  grid-template-columns: 1fr, 1fr;
+}
+.status {
+  font-weight: 900;
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+.lastFetchedTime {
+  color: #858585;
+  grid-column: 1/1;
+}
+.retryIcon {
+  color: #5db85b;
+  grid-column: 2/2;
+}
+.columnName {
+  color: #858585 !important;
+}
+.green {
+  color: #5db85b !important;
+}
+.red {
+  color: red !important;
+}
+.MuiTableCell-head {
+  padding: 20px !important;
+}

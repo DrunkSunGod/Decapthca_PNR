@@ -8,6 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import "./AllPassengerCard.css";
 
 interface IAllPassengerCardProps {
   allPassengersData: IPassengerData[] | null;
@@ -23,25 +24,31 @@ export function AllPassengerCard(props: IAllPassengerCardProps): JSX.Element {
     else return lastFetchedTime.toString() + " minutes ago";
   }
   return (
-    <div className="allPassengerCard">
-      <div className="cardHeader">
-        <div className="title">Passenger Status</div>
-        <div className="chartStatus">
-          <div className="status">{props.chartStatus ?? ""}</div>
-          <div className="lastFetchedTime">
-            {getLastFetchedTimeString(lastFetchedTime)}
-          </div>
-          <div className="retryIcon">
-            <ReplayIcon></ReplayIcon>
+    <div className="cardContainer">
+      <div className="allPassengerCard">
+        <div className="cardHeader allPassengerCardHeader">
+          <div className="passengerStatus">Passenger Status</div>
+          <div className="chartStatus">
+            <div className="status">{props.chartStatus ?? ""}</div>
+            <div className="lastFetchedTime">
+              {getLastFetchedTimeString(lastFetchedTime)}
+            </div>
+            <div className="retryIcon">
+              <ReplayIcon></ReplayIcon>
+            </div>
           </div>
         </div>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>S. No</TableCell>
-                <TableCell align="right">Current Status</TableCell>
-                <TableCell align="right">Booking Status</TableCell>
+                <TableCell className="columnName">S. No</TableCell>
+                <TableCell className="columnName" align="right">
+                  Current Status
+                </TableCell>
+                <TableCell className="columnName" align="right">
+                  Booking Status
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -53,7 +60,10 @@ export function AllPassengerCard(props: IAllPassengerCardProps): JSX.Element {
                   <TableCell component="th" scope="row">
                     {passengerData.serialNumber}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell
+                    className={props.isWL ? "red" : "green"}
+                    align="right"
+                  >
                     {passengerData.currentStatus}
                   </TableCell>
                   <TableCell align="right">

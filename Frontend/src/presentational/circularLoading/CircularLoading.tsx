@@ -1,6 +1,6 @@
 import { CircularProgress } from "@mui/material";
 import { useState, useEffect } from "react";
-
+import "./CircularLoading.css";
 interface ICircularLoadingProps {
   isLoading: boolean;
 }
@@ -16,14 +16,18 @@ export const CircularLoading = (props: ICircularLoadingProps) => {
     setProgress(0);
   }, [props]);
   setTimeout(
-    () => setProgress((currentProgress) => getNextProgressVal(currentProgress)),
+    () =>
+      setProgress((currentProgress) =>
+        props.isLoading ? getNextProgressVal(currentProgress) : currentProgress
+      ),
     900
   );
   return props.isLoading ? (
     <div className="loading">
       <CircularProgress
+        color="success"
         className="spinner"
-        size={100}
+        size={120}
         variant="determinate"
         value={progress}
       ></CircularProgress>
