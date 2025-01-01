@@ -1,14 +1,18 @@
+//Hooks
 import { useState, useRef } from "react";
-import "./App.css";
+//Interfaces
 import {
   DataModule,
   IBookingInfo,
   IPassengerData,
 } from "./data module/dataModule";
+//Presentational components
 import { ErrorMessage } from "./presentational/errorMessage/ErrorMessage";
 import { Form } from "./presentational/form/Form";
 import { CircularLoading } from "./presentational/circularLoading/CircularLoading";
 import { PNRStatus } from "./presentational/PNRStatus/PNRStatus";
+//Styles
+import "./App.css";
 
 function App() {
   //State of the App
@@ -18,42 +22,51 @@ function App() {
   const [isFormVisible, setIsFormVisible] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [bookingInfo, setBookingInfo] = useState<IBookingInfo | null>(null);
-  const [allPassengerData, setAllPassengerData] = useState<
+  const [allPassengersData, setAllPassengersData] = useState<
     IPassengerData[] | null
   >(null);
   const [isDataVisible, setIsDataVisibe] = useState<boolean>(false);
+  //Reference to the form
   const inputRef = useRef<HTMLInputElement>(null);
+
   function onClickChange() {
     inputRef.current?.focus();
     setIsDataVisibe(false);
   }
+
   const fetchAndSetAppData = async (PNR: string) => {
     setIsFormVisible(false);
-    if (isDataVisible) setIsDataVisibe(false);
+    setIsDataVisibe(false);
+
     const dataModule = new DataModule();
-    const appData = await dataModule.getAppData(PNR);
-    const [fetchedBookingInfo, fetchedAllPassengerData, fetchedErrorMessage] =
-      appData;
-    console.log(appData);
+    const [fetchedBookingInfo, fetchedAllPassengersData, fetchedErrorMessage] =
+      await dataModule.getAppData(PNR);
+
     setBookingInfo(fetchedBookingInfo);
-    setAllPassengerData(fetchedAllPassengerData);
-    if (fetchedBookingInfo) {
-      setIsDataVisibe(true);
-    }
-    if (fetchedErrorMessage.length) {
+    setAllPassengersData(fetchedAllPassengersData);
+
+    if (fetchedBookingInfo !== null) setIsDataVisibe(true);
+    if (isErrorMessageNonEmpty(fetchedErrorMessage)) {
       setErrorMessage(fetchedErrorMessage);
       setIsErrorMessageVisible(true);
     }
+
     setIsFormVisible(true);
-    setIsDataVisibe(fetchedErrorMessage.length === 0);
+    setIsDataVisibe(!isErrorMessageNonEmpty(fetchedErrorMessage));
   };
+
+  function isErrorMessageNonEmpty(errorMessage: string) {
+    return errorMessage.length > 0;
+  }
+
   async function onClickRetry() {
     setIsDataVisibe(false);
     setIsFormVisible(false);
     setIsLoading(true);
-    await fetchAndSetAppData(bookingInfo!.PNR);
+    await fetchAndSetAppData(bookingInfo!.PNR); //Only called when bookingInfo is not null
     setIsLoading(false);
   }
+
   const onDismissError = (): void => {
     setIsErrorMessageVisible(false);
   };
@@ -64,6 +77,7 @@ function App() {
     await fetchAndSetAppData(inputValue);
     setIsLoading(false);
   }
+
   return (
     <div className="app">
       <ErrorMessage
@@ -80,7 +94,7 @@ function App() {
       <CircularLoading isLoading={isLoading}></CircularLoading>
       <PNRStatus
         bookingInfo={bookingInfo}
-        allPassengersData={allPassengerData}
+        allPassengersData={allPassengersData}
         isDataVisible={isDataVisible}
         onClickChange={onClickChange}
         onClickRetry={onClickRetry}
