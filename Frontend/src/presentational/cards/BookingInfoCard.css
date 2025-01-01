@@ -19,14 +19,14 @@
 }
 .PNR {
   font-size: 30px;
-  font-weight: 900;
+  font-weight: 500;
   margin-left: 20px;
   margin-right: 20px;
 }
 .changeLink {
   font-size: 20px;
   color: #5db85b;
-  font-weight: 900;
+  font-weight: 600;
   margin-bottom: 5px;
   &:hover {
     cursor: pointer;
@@ -57,4 +57,24 @@
   margin-left: 20px;
   margin-bottom: 20px;
   color: #858585;
+}
+@media screen and (max-width: 850px) {
+  .bookingInfoCard {
+    width: 58vw;
+  }
+  .PNR {
+    font-size: 20px;
+  }
+  .changeLink {
+    font-size: 14px;
+  }
+  .sourceAndDestination {
+    flex-direction: column;
+  }
+  .destination {
+    margin-left: 0px;
+  }
+  .sourceAndDestination {
+    margin-bottom: 8px;
+  }
 }

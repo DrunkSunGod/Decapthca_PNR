@@ -1,11 +1,17 @@
+//Interfaces
 import { IBookingInfo } from "../../data module/dataModule";
+//Icons
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+//Styles
 import "./BookingInfoCard.css";
+
 type IBookingInfoCardProps = Partial<IBookingInfo | null> & {
   onClickChange: () => void;
 };
+
 export function BookingInfoCard(props: IBookingInfoCardProps): JSX.Element {
-  const trainInfo = props?.trainNumber + " - " + props?.trainName;
+  const trainInfo: string = props?.trainNumber + " - " + props?.trainName;
+
   return props ? (
     <div className="cardContainer">
       <div className="bookingInfoCard">
