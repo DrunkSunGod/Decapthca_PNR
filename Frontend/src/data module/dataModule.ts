@@ -1,5 +1,4 @@
-//active test PNR: 2918332877
-export interface IDateOfJourney {
+interface IDateOfJourney {
   day: string;
   date: number;
   month: string;
@@ -26,61 +25,83 @@ export interface IPassengerData {
   bookingStatus: string;
 }
 
+type IAppData = [IBookingInfo | null, IPassengerData[] | null, string];
+
 export class DataModule {
   private readonly PNRDetailsBaseURL: string;
   private readonly stationNameBaseURL: string;
+  private readonly emptyPNRErrorMessage: string;
+  private readonly callFailedErrorMessage: string;
+  private readonly invalidPNRErrorMessage: string;
 
   constructor() {
     this.PNRDetailsBaseURL =
       "https://decaptcha-pnr-backend.onrender.com/finpredict?pnrnumber=";
     this.stationNameBaseURL =
       "https://www.ixigo.com/action/content/trainstation?searchFor=trainstationsLatLon&anchor=false&value=";
+
+    this.emptyPNRErrorMessage = "Please Enter Your PNR";
+    this.callFailedErrorMessage =
+      "Sorry, we are unable to process your request at the moment. Please try later";
+    this.invalidPNRErrorMessage =
+      "The PNR you have entererd is invalid. Please enter a valid PNR";
   }
 
-  public async getPNRData(PNR: string) {
-    if (PNR.length === 0) return { errorMessage: "Please Enter Your PNR" };
+  public async getAppData(PNR: string): Promise<IAppData> {
+    const rawPNRData = await this.getPNRData(PNR);
+    const bookingInfo = await this.getBookingInfo(rawPNRData);
+    const allPassengersData = this.getAllPassengersData(rawPNRData);
+    const errorMessage = rawPNRData.errorMessage ?? "";
+    return [bookingInfo, allPassengersData, errorMessage];
+  }
+
+  private async getPNRData(PNR: string) {
+    if (PNR.length === 0) {
+      const emptyPNRResponse = this.getErrorResponse(this.emptyPNRErrorMessage);
+      return emptyPNRResponse;
+    }
+
+    if (!this.isPNRValid(PNR)) {
+      const invalidPNRResponse = this.getErrorResponse(
+        this.invalidPNRErrorMessage
+      );
+      return invalidPNRResponse;
+    }
+
     const PNRDetailsEndpoint = this.PNRDetailsBaseURL + PNR;
-    let PNRData;
 
     try {
       const response = await fetch(PNRDetailsEndpoint);
-      const data = await response.json();
-      PNRData = data;
+      const PNRData = await response.json();
+      return PNRData;
     } catch (error) {
       console.error(error);
-      PNRData = {
-        errorMessage:
-          "Sorry, we are unable to process your request at the moment. Please try later.",
-      };
+      const callFailedResponse = this.getErrorResponse(
+        this.callFailedErrorMessage
+      );
+      return callFailedResponse;
     }
-    return PNRData;
   }
 
-  public async getStationName(stationCode: string): Promise<string> {
-    const stationNameEndPoint = this.stationNameBaseURL + stationCode;
-    let stationName: string = "";
+  private isPNRValid(PNR: string) {
+    const isPNR10Digits = PNR.length === 10;
+    if (!isPNR10Digits) return false;
 
-    try {
-      //the API returns a list of suggested stations.
-      //Result that matches exactly with the given stationCode is stored at 0th index.
-      //The full stationName is stored at station.e
-      const response = await fetch(stationNameEndPoint);
-      const data = await response.json();
-      stationName = data[0].e;
-    } catch (error) {
-      console.error(error);
-      stationName = stationCode;
-    }
+    for (let i = 0; i < PNR.length; i++)
+      if (!(PNR[i] >= "0" && PNR[i] <= "9")) return false;
 
-    return stationName;
+    return true;
   }
 
-  public hasErrorMessage(rawPNRData): boolean {
-    return "errorMessage" in rawPNRData;
+  private getErrorResponse(error: string) {
+    return {
+      errorMessage: error,
+    };
   }
 
-  public async getBookingInfo(rawPNRData): Promise<IBookingInfo | null> {
+  private async getBookingInfo(rawPNRData): Promise<IBookingInfo | null> {
     if (this.hasErrorMessage(rawPNRData)) return null;
+
     //Partial used for declaring empty object
     let bookingInfo: Partial<IBookingInfo> = {};
     bookingInfo = {
@@ -99,37 +120,53 @@ export class DataModule {
       chartStatus: rawPNRData.chartStatus,
       isWL: this.isWL(rawPNRData),
     };
+
     return bookingInfo as IBookingInfo;
+  }
+
+  private async getStationName(stationCode: string): Promise<string> {
+    const stationNameEndPoint = this.stationNameBaseURL + stationCode;
+    let stationName: string = "";
+
+    try {
+      //the API returns a list of suggested stations.
+      //Result that matches exactly with the given stationCode is stored at 0th index.
+      //The full stationName is stored at station.e
+      const response = await fetch(stationNameEndPoint);
+      const data = await response.json();
+      stationName = data[0].e;
+    } catch (error) {
+      console.error(error);
+      stationName = stationCode;
+    }
+
+    return stationName;
+  }
+
+  private hasErrorMessage(rawPNRData): boolean {
+    return "errorMessage" in rawPNRData;
   }
 
   private isWL(rawPNRData): boolean {
     return rawPNRData.isWL === "Y";
   }
 
-  public getAllPassengerData(rawPNRData): IPassengerData[] | null {
+  private getAllPassengersData(rawPNRData): IPassengerData[] | null {
     if (this.hasErrorMessage(rawPNRData)) return null;
 
-    const rawAllPassengerData = rawPNRData.passengerList;
-    const allPassengerData: IPassengerData[] = [];
-    for (const rawPassengerData of rawAllPassengerData) {
+    const rawAllPassengersData = rawPNRData.passengerList;
+    const allPassengersData: IPassengerData[] = [];
+
+    for (const rawPassengerData of rawAllPassengersData) {
       const passengerData: IPassengerData = {
         serialNumber: rawPassengerData.passengerSerialNumber,
         bookingStatus: rawPassengerData.bookingStatusDetails,
         currentStatus: rawPassengerData.currentStatusDetails,
       };
-      allPassengerData.push(passengerData);
+      allPassengersData.push(passengerData);
     }
-    return allPassengerData;
-  }
 
-  public async getAppData(
-    PNR: string
-  ): Promise<[IBookingInfo | null, IPassengerData[] | null, string]> {
-    const rawPNRData = await this.getPNRData(PNR);
-    const bookingInfo = await this.getBookingInfo(rawPNRData);
-    const allPassengerData = this.getAllPassengerData(rawPNRData);
-    const errorMessage = rawPNRData.errorMessage ?? "";
-    return [bookingInfo, allPassengerData, errorMessage];
+    return allPassengersData;
   }
 
   private getTimeFromDateString(dateString: string): string {

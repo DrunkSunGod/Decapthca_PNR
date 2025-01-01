@@ -1,6 +1,10 @@
+//Hooks
 import { useState } from "react";
+//Interfaces
 import { IPassengerData } from "../../data module/dataModule";
+//Icons
 import ReplayIcon from "@mui/icons-material/Replay";
+//MUI table utilities
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,6 +12,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+//Styles
 import "./AllPassengerCard.css";
 
 interface IAllPassengerCardProps {
@@ -16,6 +21,7 @@ interface IAllPassengerCardProps {
   isWL?: boolean;
   onClickRetry: () => void;
 }
+
 export function AllPassengerCard(props: IAllPassengerCardProps): JSX.Element {
   const [lastFetchedTime, setLastFetchedTime] = useState(0);
   setTimeout(() => setLastFetchedTime(lastFetchedTime + 1), 60000);
