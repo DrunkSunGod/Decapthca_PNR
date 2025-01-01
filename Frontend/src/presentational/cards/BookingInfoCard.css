@@ -58,3 +58,23 @@
   margin-bottom: 20px;
   color: #858585;
 }
+@media screen and (max-width: 850px) {
+  .bookingInfoCard {
+    width: 55vw;
+  }
+  .PNR {
+    font-size: 20px;
+  }
+  .changeLink {
+    font-size: 14px;
+  }
+  .sourceAndDestination {
+    flex-direction: column;
+  }
+  .destination {
+    margin-left: 0px;
+  }
+  .sourceAndDestination {
+    margin-bottom: 8px;
+  }
+}

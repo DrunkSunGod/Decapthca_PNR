@@ -2,6 +2,7 @@
   font-size: 30px;
   font-weight: 500;
   margin-left: 20px;
+  margin-right: 5px;
 }
 .allPassengerCard {
   margin-top: 50px;
@@ -18,6 +19,7 @@
   margin-right: 8px;
   display: inline-grid;
   grid-template-columns: 1fr, 1fr;
+  margin-left: 8px;
 }
 .status {
   font-weight: 600;
@@ -48,4 +50,18 @@
 }
 .MuiTableCell-head {
   padding: 20px !important;
+}
+@media screen and (max-width: 850px) {
+  .allPassengerCard {
+    width: 55vw;
+  }
+  .passengerStatus {
+    font-size: 20px;
+  }
+  .status {
+    font-size: 14px;
+  }
+  .lastFetchedTime {
+    font-size: 10px;
+  }
 }
