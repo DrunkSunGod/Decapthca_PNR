@@ -1,6 +1,6 @@
 .passengerStatus {
   font-size: 30px;
-  font-weight: 900;
+  font-weight: 500;
   margin-left: 20px;
 }
 .allPassengerCard {
@@ -20,7 +20,7 @@
   grid-template-columns: 1fr, 1fr;
 }
 .status {
-  font-weight: 900;
+  font-weight: 600;
   grid-column-start: 1;
   grid-column-end: 2;
 }
